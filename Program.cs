@@ -7,6 +7,13 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
+// Render sets PORT dynamically. Bind Kestrel explicitly for non-Docker deploys.
+var port = Environment.GetEnvironmentVariable("PORT");
+if (!string.IsNullOrWhiteSpace(port))
+{
+    builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+
 builder.Services.AddControllers()
     .AddJsonOptions(options => {
         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
@@ -23,12 +30,27 @@ builder.Services.AddDbContext<AcmvDbContext>(options =>
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<PurchasingService>();
 
+var corsOrigins = (Environment.GetEnvironmentVariable("CORS_ORIGINS") ?? "")
+    .Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries);
+
 builder.Services.AddCors(options =>
 {
     options.AddPolicy("AllowFrontend", policy =>
-        policy.AllowAnyOrigin()
-              .AllowAnyMethod()
-              .AllowAnyHeader());
+    {
+        if (corsOrigins.Length > 0)
+        {
+            policy.WithOrigins(corsOrigins)
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+        else
+        {
+            // Fallback for first deploy / local testing.
+            policy.AllowAnyOrigin()
+                  .AllowAnyMethod()
+                  .AllowAnyHeader();
+        }
+    });
 });
 
 var app = builder.Build();
@@ -36,7 +58,9 @@ var app = builder.Build();
 // Custom Global Exception Handler
 app.UseMiddleware<ExceptionMiddleware>();
 
-if (app.Environment.IsDevelopment())
+var enableSwagger = app.Environment.IsDevelopment() ||
+                    string.Equals(Environment.GetEnvironmentVariable("ENABLE_SWAGGER"), "true", StringComparison.OrdinalIgnoreCase);
+if (enableSwagger)
 {
     app.UseSwagger();
     app.UseSwaggerUI();
@@ -45,5 +69,6 @@ if (app.Environment.IsDevelopment())
 app.UseCors("AllowFrontend");
 app.UseAuthorization();
 app.MapControllers();
+app.MapGet("/", () => Results.Ok(new { status = "ok", service = "acmv-backend" }));
 
 app.Run();
