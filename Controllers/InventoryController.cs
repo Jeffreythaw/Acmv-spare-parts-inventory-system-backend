@@ -19,9 +19,9 @@ namespace AcmvInventory.Controllers
 
         [HttpGet]
         public async Task<ActionResult<ApiResponse<IEnumerable<Inventory>>>> GetItems(
-            [FromQuery] string search, 
-            [FromQuery] string building, 
-            [FromQuery] string category)
+            [FromQuery] string? search = null,
+            [FromQuery] string? building = null,
+            [FromQuery] string? category = null)
         {
             var query = _context.Inventory.AsQueryable();
 
