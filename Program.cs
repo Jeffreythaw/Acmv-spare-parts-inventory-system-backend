@@ -55,6 +55,13 @@ builder.Services.AddCors(options =>
 
 var app = builder.Build();
 
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AcmvDbContext>();
+    var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("InventorySeeder");
+    await InventorySeeder.SeedAsync(db, logger, app.Environment.ContentRootPath);
+}
+
 // Custom Global Exception Handler
 app.UseMiddleware<ExceptionMiddleware>();
 
