@@ -35,6 +35,11 @@ namespace AcmvInventory.Controllers
                 query = query.Where(i => i.Building == building);
             }
 
+            if (!string.IsNullOrEmpty(category) && category != "All Categories")
+            {
+                query = query.Where(i => i.PartCategory == category);
+            }
+
             var items = await query.ToListAsync();
             return Ok(ApiResponse<IEnumerable<Inventory>>.Ok(items));
         }
@@ -58,6 +63,17 @@ namespace AcmvInventory.Controllers
 
             await _context.SaveChangesAsync();
             return Ok(ApiResponse<string>.Ok("Update successful"));
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<ApiResponse<string>>> DeleteItem(string id)
+        {
+            var item = await _context.Inventory.FindAsync(id);
+            if (item == null) return NotFound(ApiResponse<string>.Fail("Item not found"));
+
+            _context.Inventory.Remove(item);
+            await _context.SaveChangesAsync();
+            return Ok(ApiResponse<string>.Ok("Delete successful"));
         }
     }
 }
