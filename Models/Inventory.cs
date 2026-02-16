@@ -35,6 +35,6 @@ namespace AcmvInventory.Models
         public string LocationBin { get; set; }
 
         [Timestamp]
-        public byte[] RowVersion { get; set; }
+        public byte[] RowVersion { get; set; } = [1];
     }
 }

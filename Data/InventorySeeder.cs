@@ -69,6 +69,7 @@ public static class InventorySeeder
             ReorderQty = item.ReorderQty,
             PreferredSupplierId = Safe(item.PreferredSupplierId),
             LocationBin = Safe(item.LocationBin),
+            RowVersion = [1],
             CreatedAt = item.LastUpdated ?? now,
             LastUpdated = item.LastUpdated ?? now
         }).ToList();

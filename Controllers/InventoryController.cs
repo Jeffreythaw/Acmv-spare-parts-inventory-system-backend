@@ -47,6 +47,7 @@ namespace AcmvInventory.Controllers
         [HttpPost]
         public async Task<ActionResult<ApiResponse<Inventory>>> PostItem(Inventory item)
         {
+            if (item.RowVersion == null || item.RowVersion.Length == 0) item.RowVersion = [1];
             item.LastUpdated = DateTime.UtcNow;
             _context.Inventory.Add(item);
             await _context.SaveChangesAsync();
@@ -57,6 +58,7 @@ namespace AcmvInventory.Controllers
         public async Task<ActionResult<ApiResponse<string>>> PutItem(string id, Inventory item)
         {
             if (id != item.Id) return BadRequest(ApiResponse<string>.Fail("ID mismatch"));
+            if (item.RowVersion == null || item.RowVersion.Length == 0) item.RowVersion = [1];
 
             _context.Entry(item).State = EntityState.Modified;
             item.LastUpdated = DateTime.UtcNow;
