@@ -7,11 +7,16 @@ using System.Text.Json.Serialization;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Render sets PORT dynamically. Bind Kestrel explicitly for non-Docker deploys.
+// Render sets PORT dynamically. For local runs, default to 5100 to avoid common
+// macOS conflicts on 5000 (AirPlay/ControlCenter).
 var port = Environment.GetEnvironmentVariable("PORT");
 if (!string.IsNullOrWhiteSpace(port))
 {
     builder.WebHost.UseUrls($"http://0.0.0.0:{port}");
+}
+else if (string.IsNullOrWhiteSpace(Environment.GetEnvironmentVariable("ASPNETCORE_URLS")))
+{
+    builder.WebHost.UseUrls("http://localhost:5100");
 }
 
 builder.Services.AddControllers()

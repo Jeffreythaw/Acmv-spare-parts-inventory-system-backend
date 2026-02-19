@@ -21,7 +21,8 @@ namespace AcmvInventory.Controllers
         public async Task<ActionResult<ApiResponse<IEnumerable<Inventory>>>> GetItems(
             [FromQuery] string? search = null,
             [FromQuery] string? building = null,
-            [FromQuery] string? category = null)
+            [FromQuery] string? category = null,
+            [FromQuery] string? status = null)
         {
             var query = _context.Inventory.AsQueryable();
 
@@ -38,6 +39,14 @@ namespace AcmvInventory.Controllers
             if (!string.IsNullOrEmpty(category) && category != "All Categories")
             {
                 query = query.Where(i => i.PartCategory == category);
+            }
+
+            if (!string.IsNullOrEmpty(status) && status != "All Statuses")
+            {
+                if (Enum.TryParse<PartStatus>(status, true, out var parsedStatus))
+                {
+                    query = query.Where(i => i.Status == parsedStatus);
+                }
             }
 
             var items = await query.ToListAsync();
