@@ -24,8 +24,11 @@ builder.Services.AddControllers()
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+var lsConnectionString = builder.Configuration.GetConnectionString("LS")
+    ?? throw new InvalidOperationException("Missing connection string 'LS'.");
+
 builder.Services.AddDbContext<AcmvDbContext>(options =>
-    options.UseInMemoryDatabase("AcmvInventoryDb"));
+    options.UseSqlServer(lsConnectionString));
 
 builder.Services.AddScoped<TransactionService>();
 builder.Services.AddScoped<PurchasingService>();
@@ -59,6 +62,7 @@ using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<AcmvDbContext>();
     var logger = scope.ServiceProvider.GetRequiredService<ILoggerFactory>().CreateLogger("InventorySeeder");
+    await db.Database.MigrateAsync();
     await InventorySeeder.SeedAsync(db, logger, app.Environment.ContentRootPath);
 }
 

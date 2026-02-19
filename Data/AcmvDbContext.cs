@@ -20,6 +20,7 @@ namespace AcmvInventory.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Inventory>()
+                .ToTable("TKS_Inventory", "dbo")
                 .HasIndex(i => i.TagNo);
 
             modelBuilder.Entity<PurchaseRequest>()
