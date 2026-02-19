@@ -4,6 +4,7 @@ using AcmvInventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcmvInventory.Backend.Migrations
 {
     [DbContext(typeof(AcmvDbContext))]
-    partial class AcmvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260219073422_AddMovementMetadata")]
+    partial class AddMovementMetadata
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -131,67 +134,6 @@ namespace AcmvInventory.Backend.Migrations
                     b.ToTable("TKS_Inventory", "dbo");
                 });
 
-            modelBuilder.Entity("AcmvInventory.Models.OrderSchedule", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<DateTime>("CreatedAt")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("CreatedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("LastUpdated")
-                        .HasColumnType("datetime2");
-
-                    b.Property<string>("Remark")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<DateTime>("ScheduledDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("Status")
-                        .HasColumnType("int");
-
-                    b.Property<string>("SupplierId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("TKS_OrderSchedules", "dbo");
-                });
-
-            modelBuilder.Entity("AcmvInventory.Models.OrderScheduleLine", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("InventoryId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("OrderScheduleId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("Qty")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("InventoryId");
-
-                    b.HasIndex("OrderScheduleId");
-
-                    b.ToTable("TKS_OrderScheduleLines", "dbo");
-                });
-
             modelBuilder.Entity("AcmvInventory.Models.POLine", b =>
                 {
                     b.Property<int>("Id")
@@ -225,7 +167,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("TKS_POLines", "dbo");
+                    b.ToTable("POLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PRLine", b =>
@@ -260,7 +202,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("PurchaseRequestId");
 
-                    b.ToTable("TKS_PRLines", "dbo");
+                    b.ToTable("PRLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PurchaseOrder", b =>
@@ -293,7 +235,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("TKS_PurchaseOrders", "dbo");
+                    b.ToTable("PurchaseOrders");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PurchaseRequest", b =>
@@ -320,7 +262,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_PurchaseRequests", "dbo");
+                    b.ToTable("PurchaseRequests");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.StockTransaction", b =>
@@ -370,7 +312,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_Transactions", "dbo");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.Supplier", b =>
@@ -409,7 +351,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_Suppliers", "dbo");
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.TransactionLine", b =>
@@ -445,23 +387,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("StockTransactionId");
 
-                    b.ToTable("TKS_TransactionLines", "dbo");
-                });
-
-            modelBuilder.Entity("AcmvInventory.Models.OrderScheduleLine", b =>
-                {
-                    b.HasOne("AcmvInventory.Models.Inventory", "Inventory")
-                        .WithMany()
-                        .HasForeignKey("InventoryId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("AcmvInventory.Models.OrderSchedule", null)
-                        .WithMany("Lines")
-                        .HasForeignKey("OrderScheduleId")
-                        .OnDelete(DeleteBehavior.Cascade);
-
-                    b.Navigation("Inventory");
+                    b.ToTable("TransactionLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.POLine", b =>
@@ -520,11 +446,6 @@ namespace AcmvInventory.Backend.Migrations
                         .HasForeignKey("StockTransactionId");
 
                     b.Navigation("Inventory");
-                });
-
-            modelBuilder.Entity("AcmvInventory.Models.OrderSchedule", b =>
-                {
-                    b.Navigation("Lines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PurchaseOrder", b =>

@@ -15,6 +15,12 @@ namespace AcmvInventory.Models
         public string Counterparty { get; set; }
         public string Reference { get; set; }
         public string Remark { get; set; }
+        public string? ReasonCode { get; set; }
+        public string? SourceLocation { get; set; }
+        public string? DestinationLocation { get; set; }
+        public string? DocumentType { get; set; }
+        public string? DocumentNo { get; set; }
+        public string? ApprovedBy { get; set; }
         public List<TransactionLine> Lines { get; set; } = new();
     }
 }

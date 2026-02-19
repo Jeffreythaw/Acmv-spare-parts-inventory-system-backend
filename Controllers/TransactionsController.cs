@@ -71,6 +71,12 @@ namespace AcmvInventory.Controllers
             existing.PerformedBy = txn.PerformedBy;
             existing.Reference = txn.Reference;
             existing.Remark = txn.Remark;
+            existing.ReasonCode = txn.ReasonCode;
+            existing.SourceLocation = txn.SourceLocation;
+            existing.DestinationLocation = txn.DestinationLocation;
+            existing.DocumentType = txn.DocumentType;
+            existing.DocumentNo = txn.DocumentNo;
+            existing.ApprovedBy = txn.ApprovedBy;
             existing.Lines = txn.Lines ?? new List<TransactionLine>();
 
             foreach (var line in existing.Lines)

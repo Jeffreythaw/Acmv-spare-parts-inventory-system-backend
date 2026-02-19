@@ -19,8 +19,14 @@ namespace AcmvInventory.Services
             using var dbTransaction = await _context.Database.BeginTransactionAsync();
             try
             {
+                if (txn.Lines == null || txn.Lines.Count == 0)
+                    throw new Exception("Transaction must include at least one line");
+
                 foreach (var line in txn.Lines)
                 {
+                    if (line.Qty <= 0)
+                        throw new Exception("Transaction line quantity must be greater than 0");
+
                     var inventory = await _context.Inventory
                         .FirstOrDefaultAsync(i => i.Id == line.InventoryId);
 

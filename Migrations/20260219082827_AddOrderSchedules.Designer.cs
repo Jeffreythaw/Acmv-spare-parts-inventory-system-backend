@@ -4,6 +4,7 @@ using AcmvInventory.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace AcmvInventory.Backend.Migrations
 {
     [DbContext(typeof(AcmvDbContext))]
-    partial class AcmvDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260219082827_AddOrderSchedules")]
+    partial class AddOrderSchedules
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -162,7 +165,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_OrderSchedules", "dbo");
+                    b.ToTable("OrderSchedules");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.OrderScheduleLine", b =>
@@ -189,7 +192,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("OrderScheduleId");
 
-                    b.ToTable("TKS_OrderScheduleLines", "dbo");
+                    b.ToTable("OrderScheduleLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.POLine", b =>
@@ -225,7 +228,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("PurchaseOrderId");
 
-                    b.ToTable("TKS_POLines", "dbo");
+                    b.ToTable("POLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PRLine", b =>
@@ -260,7 +263,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("PurchaseRequestId");
 
-                    b.ToTable("TKS_PRLines", "dbo");
+                    b.ToTable("PRLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PurchaseOrder", b =>
@@ -293,7 +296,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("SupplierId");
 
-                    b.ToTable("TKS_PurchaseOrders", "dbo");
+                    b.ToTable("PurchaseOrders");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.PurchaseRequest", b =>
@@ -320,7 +323,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_PurchaseRequests", "dbo");
+                    b.ToTable("PurchaseRequests");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.StockTransaction", b =>
@@ -370,7 +373,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_Transactions", "dbo");
+                    b.ToTable("Transactions");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.Supplier", b =>
@@ -409,7 +412,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("TKS_Suppliers", "dbo");
+                    b.ToTable("Suppliers");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.TransactionLine", b =>
@@ -445,7 +448,7 @@ namespace AcmvInventory.Backend.Migrations
 
                     b.HasIndex("StockTransactionId");
 
-                    b.ToTable("TKS_TransactionLines", "dbo");
+                    b.ToTable("TransactionLines");
                 });
 
             modelBuilder.Entity("AcmvInventory.Models.OrderScheduleLine", b =>
